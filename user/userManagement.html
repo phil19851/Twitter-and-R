@@ -1,0 +1,51 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="container">
+    <div class="row" style="margin-top:10px">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Management</h5>
+
+                    <h1 style="text-align:center; color:white;"></h1>
+                    <div class="container">
+                        <p class="error error--hidden">
+                            {% if error %}
+                        <h5 style="color:red"> {{ error }}</h5>
+                        {% endif %}
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <h5 style="color:red">{{ message }}</h5></br>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        </p>
+                        <form id="changePsw" name="changePsw" method="POST" action="/user/userManagement">
+							<div classs="filter-search-filed">
+								<i class="fa fa-search active"></i>
+								<!--<input class="form-control filter-items" placeholder="Enter user name" autocomplete="off" name="user_name" type="text"/>-->
+								<select class="form-control filter-items" name = "username" id = "username" style="width:186px;">
+									<option value="" disabled selected>Select the User</option>
+								{% for users in user_list %} 
+									<option id = "username">{{ users.username }}</option>
+								{%endfor%}
+								</select>
+							</div>
+                            </br></br>
+							<input name="role" id="role", placeholder="Enter the role for user">
+                            </br></br>
+                            <input name="site" id="site" placeholder="Enter sites to access for user">
+                            </br></br>
+                            <input type="submit" name="submit" value="Submit" class="registerbtn">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

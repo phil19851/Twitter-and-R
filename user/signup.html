@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/static/css/login.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+  
+</head>
+
+<body>
+
+  <form id="signUp" name="signUp" method="post" action="/user/signup">
+    <h1 style="text-align:center; color:white;">DAT Tool</h1>
+    <div class="container">
+      <h3>Sign Up</h3>
+      <p>Please fill in this form to create an account.</p>
+      <p class="error error--hidden">
+        {% if error %}
+      <h5 style="color:red"> {{ error }}</h5>
+      {% endif %}
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>
+          <h5 style="color:red">{{ message }}</h5>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+
+      </p>
+      <hr>
+      <label for="username"><b>User ID</b></label>
+      <input type="text" placeholder="Enter Email" name="username" id="username" autocomplete="off" required>
+      <label id="username-error" class="error" for="username"></label>
+    </br>
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+      <!--    <label for="psw-repeat"><b>Repeat Password</b></label>-->
+      <!--    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>-->
+      <!--    <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>-->
+      <input type="submit" class="registerbtn" value="submit">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <p>Already have an account? <a href="/">Sign in</a>.</p>
+
+    </div>
+  </form>
+</body>
+
+</html>
+<script>
+  $(document).ready(function () {
+    var addUserForm = $("#signUp");
+    /**
+     * Custom validator for contains at least one lower-case letter
+     */
+    $.validator.addMethod("pwCheck", function (value, element) {
+      return this.optional(element) || /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!#%*?&]).{8,}/.test(value)
+    }, "");
+
+    $.validator.addMethod("emailCheck", function (value, element) {
+      return this.optional(element) || /@cognizant.com/.test(value)
+    }, "");
+
+    var validator = addUserForm.validate({
+      rules: {
+        username: { required: true, email: true, emailCheck: false },
+        psw: {
+          required: true,
+          pwCheck: true
+        },
+      },
+      messages: {
+        username: { required: "Email id is required", email: "Please enter valid email address"},
+        psw: {
+          required: "Password is required",
+          pwCheck: "Password must contain at least 8 characters, atmost 18 characters,  including uppercase, lowercase letters, numbers and special characters @$!#%*?&"
+        },
+      }
+    });
+  });
+</script> 
